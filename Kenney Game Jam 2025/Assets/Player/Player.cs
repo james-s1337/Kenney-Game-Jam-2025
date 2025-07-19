@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -9,15 +10,21 @@ public class Player : MonoBehaviour
     [SerializeField] private float jumpPower;
     [SerializeField] private GameObject groundCheck;
     [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private Weapon[] weapons;
 
     private Rigidbody2D rb;
-    private int facingDirection;
+    public int facingDirection { get; private set; }
     private Vector2 workspace;
 
     private bool canJump;
+    private bool canFire;
+
+    private Weapon currentWeap;
 
     private void Start()
     {
+        canFire = true;
+        ChangeWeap(WeaponType.Burst);
         facingDirection = -1;
         rb = GetComponent<Rigidbody2D>();
     }
@@ -41,6 +48,18 @@ public class Player : MonoBehaviour
 
         AddVelocityX(NormInputX);
         CheckIfShouldFlip(NormInputX);
+
+        if (currentWeap.CanFire())
+        {
+            canFire = true;
+        }
+
+        if (canFire && ShootInput)
+        {
+            Debug.Log("Fire!");
+            canFire = false;
+            Fire();
+        }
     }
     #region Movement
     // Move left or right
@@ -70,9 +89,20 @@ public class Player : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.transform.position, 0.05f, whatIsGround) && rb.linearVelocityY == 0;
     }
     #endregion
-
+    public void ChangeWeap(WeaponType weap)
+    {
+        foreach (Weapon weapon in weapons)
+        {
+            if (weapon.GetWeapType() == weap)
+            {
+                currentWeap = weapon;
+                return;
+            }
+        }
+    }
+    
     private void Fire()
     {
-
+        currentWeap.Fire();
     }
 }
