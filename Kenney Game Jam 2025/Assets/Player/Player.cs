@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private bool canJump;
     private bool canFire;
 
-    private Weapon currentWeap;
+    public Weapon currentWeap { get; private set; }
 
     private void Start()
     {
@@ -91,6 +91,8 @@ public class Player : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.transform.position, 0.05f, whatIsGround) && rb.linearVelocityY == 0;
     }
     #endregion
+
+    #region Weapon Management
     public void ChangeWeap(WeaponType weap)
     {
         // Change animation bool (Burst, Explosive)
@@ -123,4 +125,6 @@ public class Player : MonoBehaviour
     {
         currentWeap.Fire();
     }
+    #endregion
+
 }

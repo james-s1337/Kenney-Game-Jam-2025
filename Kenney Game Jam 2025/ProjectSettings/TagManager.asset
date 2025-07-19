@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Wall
   - Spaceship
+  - PowerCell
   layers:
   - Default
   - TransparentFX
