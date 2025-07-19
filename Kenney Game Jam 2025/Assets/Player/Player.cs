@@ -15,7 +15,6 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody2D rb;
     private Animator anim;
     public int facingDirection { get; private set; }
-    private Vector2 workspace;
 
     private bool canJump;
     private bool canFire;
@@ -71,7 +70,6 @@ public class Player : MonoBehaviour, IDamageable
     private void AddVelocityX(int input)
     {
         rb.linearVelocity = new Vector2 (speed * input, rb.linearVelocity.y);
-        workspace.x = speed * input;
     }
 
     // Jump, fixed amount

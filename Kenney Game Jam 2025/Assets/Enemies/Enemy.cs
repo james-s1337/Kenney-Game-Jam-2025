@@ -7,12 +7,11 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private int hp;
     [SerializeField] private int damage;
 
-    private int direction;
+    private int direction = -1;
     private Rigidbody2D rb;
 
     private void Start()
     {
-        direction = -1;
         rb = GetComponent<Rigidbody2D>();
     }
 
