@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Weapon[] weapons;
 
     private Rigidbody2D rb;
+    private Animator anim;
     public int facingDirection { get; private set; }
     private Vector2 workspace;
 
@@ -24,9 +25,10 @@ public class Player : MonoBehaviour
     private void Start()
     {
         canFire = true;
-        ChangeWeap(WeaponType.Burst);
         facingDirection = -1;
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        ChangeWeap(WeaponType.Goop);
     }
 
     private void Update()
@@ -91,14 +93,30 @@ public class Player : MonoBehaviour
     #endregion
     public void ChangeWeap(WeaponType weap)
     {
-        foreach (Weapon weapon in weapons)
+        // Change animation bool (Burst, Explosive)
+        if (weap == WeaponType.Burst)
         {
-            if (weapon.GetWeapType() == weap)
-            {
-                currentWeap = weapon;
-                return;
-            }
+            anim.SetBool("Burst", true);
+            anim.SetBool("Explosive", false);
         }
+        else if (weap == WeaponType.Goop)
+        {
+            anim.SetBool("Burst", false);
+            anim.SetBool("Explosive", true);
+        }
+        else
+        {
+            anim.SetBool("Burst", false);
+            anim.SetBool("Explosive", false);
+        }
+            foreach (Weapon weapon in weapons)
+            {
+                if (weapon.GetWeapType() == weap)
+                {
+                    currentWeap = weapon;
+                    return;
+                }
+            }
     }
     
     private void Fire()

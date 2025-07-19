@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 { 
-    [SerializeField] private float speed;
-    [SerializeField] private float lifeTime; // How long this projectile lasts before disappearing
+    [SerializeField] protected float speed;
+    [SerializeField] protected float lifeTime; // How long this projectile lasts before disappearing
 
-    private Player player;
-    private int direction;
-    private float startTime; // Time when the projectile is first fired   
+    protected Player player;
+    protected int direction;
+    protected float startTime; // Time when the projectile is first fired   
 
-    private void Awake()
+    protected virtual void Awake()
     {
         direction = 1;
         player = GameObject.Find("ALIEN").GetComponent<Player>();
@@ -18,7 +18,7 @@ public class Projectile : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if (direction != player.facingDirection)
         {
@@ -31,7 +31,7 @@ public class Projectile : MonoBehaviour
         startTime = Time.time;
     }
 
-    private void Update()
+    protected void Update()
     {
         Checks();
     }
