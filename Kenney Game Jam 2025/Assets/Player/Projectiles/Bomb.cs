@@ -1,11 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Bomb : Projectile
 {
     [SerializeField] private float explosionRadius;
     [SerializeField] private ParticleSystem particles;
     [SerializeField] private GameObject spriteObj;
+    [SerializeField] private LayerMask whatIsEnemy;
 
     private bool exploding;
     private Rigidbody2D rb;
@@ -43,6 +45,17 @@ public class Bomb : Projectile
     {
         spriteObj.SetActive(false);
         // Check OverlapCircle, get results into targets, and then damage them accordingly
+        targets = Physics2D.OverlapCircleAll(transform.position, explosionRadius, whatIsEnemy);
+
+        foreach (Collider2D target in targets)
+        {
+            Debug.Log(target.name);
+            if (target.tag == "Enemy")
+            {
+                
+                target.GetComponent<Enemy>().TakeDamage(damage);
+            }
+        }
         particles.Play();
         yield return new WaitForSeconds(particles.main.duration);
         gameObject.SetActive(false);

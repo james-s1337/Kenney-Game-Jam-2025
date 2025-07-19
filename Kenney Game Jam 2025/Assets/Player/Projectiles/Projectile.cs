@@ -5,6 +5,7 @@ public class Projectile : MonoBehaviour
 { 
     [SerializeField] protected float speed;
     [SerializeField] protected float lifeTime; // How long this projectile lasts before disappearing
+    [SerializeField] protected int damage;
 
     protected Player player;
     protected int direction;
@@ -47,6 +48,15 @@ public class Projectile : MonoBehaviour
 
         if (Time.time - startTime >= lifeTime)
         {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy")
+        {
+            collision.GetComponent<Enemy>().TakeDamage(damage);
             gameObject.SetActive(false);
         }
     }

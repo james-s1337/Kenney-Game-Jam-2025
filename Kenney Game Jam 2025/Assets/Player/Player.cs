@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Windows;
 
 // A bit messy cause it was imported from a system where I used states to control the player
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private float speed;
@@ -20,10 +20,13 @@ public class Player : MonoBehaviour
     private bool canJump;
     private bool canFire;
 
+    public int hp;
+
     public Weapon currentWeap { get; private set; }
 
     private void Start()
     {
+        hp = 3;
         canFire = true;
         facingDirection = -1;
         rb = GetComponent<Rigidbody2D>();
@@ -127,4 +130,13 @@ public class Player : MonoBehaviour
     }
     #endregion
 
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+        if (hp <= 0)
+        {
+            // Dead
+        }
+        // Send an event to the UI to update HP display using hp as parameter
+    }
 }
