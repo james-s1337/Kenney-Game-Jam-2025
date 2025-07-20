@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Windows;
 
 public class Enemy : MonoBehaviour, IDamageable
@@ -8,6 +9,11 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField] private int hp;
     [SerializeField] private int damage;
     [SerializeField] private ParticleSystem deathParticles;
+
+    [SerializeField] private AudioSource hurtSound;
+    [SerializeField] private AudioSource deathSound;
+
+    public Slider SFXSlider;
 
     private int direction = -1;
     private Rigidbody2D rb;
@@ -21,6 +27,14 @@ public class Enemy : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         boxCollider = GetComponent<BoxCollider2D>();
+
+        SFXSlider.onValueChanged.AddListener(delegate { ChangeSFXVolume(); });
+    }
+
+    private void ChangeSFXVolume()
+    {
+        hurtSound.volume = SFXSlider.value;
+        deathSound.volume = SFXSlider.value;
     }
 
     private void Update()
@@ -30,8 +44,9 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void TakeDamage(int dmg)
     {
+        ChangeSFXVolume();
         hp -= dmg;
-
+        hurtSound.Play();
         if (hp <= 0)
         {
             StartCoroutine("Die");
@@ -80,7 +95,7 @@ public class Enemy : MonoBehaviour, IDamageable
         // Play particles
         deathParticles.Play();
         // Play death sound
-
+        deathSound.Play();
         // Death sound
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);

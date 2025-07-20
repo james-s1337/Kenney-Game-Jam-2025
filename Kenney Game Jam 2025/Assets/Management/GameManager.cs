@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,9 +9,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameplayUI;
 
+    [SerializeField] private AudioSource gameOverSound;
+
     public LevelManager currentLevel { get; private set; }
 
+    public Slider SFXSlider;
+
     public UnityEvent OnLevelSet;
+
+    private void Start()
+    {
+        SFXSlider.onValueChanged.AddListener(delegate { ChangeSFXVolume(); });
+    }
+
+    private void ChangeSFXVolume()
+    {
+        gameOverSound.volume = SFXSlider.value;
+    }
 
     private bool CheckIfGameEndByUI()
     {
@@ -27,7 +42,9 @@ public class GameManager : MonoBehaviour
 
     public void Defeat()
     {
+        ChangeSFXVolume();
         Time.timeScale = 0;
+        gameOverSound.Play();
         gameOverPopup.SetActive(true);
     }
 

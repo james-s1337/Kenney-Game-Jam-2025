@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
 public class Bomb : Projectile
@@ -8,6 +9,10 @@ public class Bomb : Projectile
     [SerializeField] private ParticleSystem particles;
     [SerializeField] private GameObject spriteObj;
     [SerializeField] private LayerMask whatIsEnemy;
+
+    [SerializeField] private AudioSource boomSound;
+
+    public Slider SFXSlider;
 
     private bool exploding;
     private Rigidbody2D rb;
@@ -18,6 +23,16 @@ public class Bomb : Projectile
         base.Awake();
 
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        SFXSlider.onValueChanged.AddListener(delegate { ChangeSFXVolume(); });
+    }
+
+    private void ChangeSFXVolume()
+    {
+        boomSound.volume = SFXSlider.value;
     }
 
     protected override void OnEnable()
@@ -47,6 +62,8 @@ public class Bomb : Projectile
     }
     private IEnumerator Explode()
     {
+        ChangeSFXVolume();
+        boomSound.Play();  
         spriteObj.SetActive(false);
         // Check OverlapCircle, get results into targets, and then damage them accordingly
         targets = Physics2D.OverlapCircleAll(transform.position, explosionRadius, whatIsEnemy);

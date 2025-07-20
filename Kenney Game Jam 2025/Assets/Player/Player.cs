@@ -2,6 +2,7 @@ using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using UnityEngine.Windows;
 
 // A bit messy cause it was imported from a system where I used states to control the player
@@ -13,6 +14,13 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private GameObject groundCheck;
     [SerializeField] private LayerMask whatIsGround;
     [SerializeField] private Weapon[] weapons;
+
+    [SerializeField] private AudioSource hurtSound;
+    [SerializeField] private AudioSource deathSound;
+    [SerializeField] private AudioSource victorySound;
+    [SerializeField] private AudioSource switchSound;
+
+    public Slider SFXSlider;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -29,6 +37,19 @@ public class Player : MonoBehaviour, IDamageable
     public UnityEvent OnDeath, OnWin;
     public UnityEvent<int> OnDamageTaken;
 
+    private void Start()
+    {
+        SFXSlider.onValueChanged.AddListener(delegate { ChangeSFXVolume(); });
+    }
+
+    private void ChangeSFXVolume()
+    {
+        hurtSound.volume = SFXSlider.value;
+        deathSound.volume = SFXSlider.value;
+        victorySound.volume = SFXSlider.value;
+        switchSound.volume = SFXSlider.value;
+    }
+
     public void ResetPlayer()
     {
         hp = 3;
@@ -41,6 +62,8 @@ public class Player : MonoBehaviour, IDamageable
         ChangeWeap(WeaponType.Single);
         SetVelocityZero();
         transform.position = new Vector3(0, 1, -3);
+
+        ChangeSFXVolume();
     }
 
     private void Update()
@@ -130,7 +153,7 @@ public class Player : MonoBehaviour, IDamageable
             anim.SetBool("Burst", false);
             anim.SetBool("Explosive", false);
         }
-
+        switchSound.Play();
         foreach (Weapon weapon in weapons)
         {
             if (weapon.GetWeapType() == weap)
@@ -139,9 +162,7 @@ public class Player : MonoBehaviour, IDamageable
                 return;
             }
         }
-
-        // Sound
-
+        
     }
     
     private void Fire()
@@ -156,10 +177,12 @@ public class Player : MonoBehaviour, IDamageable
         StartCoroutine("HurtFlash");
         OnDamageTaken?.Invoke(hp);
         // Sound
+        hurtSound.Play();
         if (hp <= 0)
         {
             // Dead
             // Death sound
+            deathSound.Play();
             OnDeath?.Invoke();
         }
         // Send an event to the UI to update HP display using hp as parameter
@@ -177,6 +200,7 @@ public class Player : MonoBehaviour, IDamageable
         if (collision.gameObject.tag == "Spaceship" && collision.gameObject.GetComponent<Spaceship>().canEscape)
         {
             // Victory sound
+            victorySound.Play();
             OnWin?.Invoke();
         }
     }

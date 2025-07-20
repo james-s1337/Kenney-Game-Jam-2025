@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour
     private float startTime;
 
     public UnityEvent OnLevelCompleted;
-    public UnityEvent<int> OnLevelStart, OnPowerCellCollected, OnLevelClear;
+    public UnityEvent<int> OnLevelStart, OnPowerCellCollected, OnLevelClear, OnLevelLoad;
     public UnityEvent<LevelManager> OnLevelEnable;
 
     private Player player;
@@ -39,7 +39,9 @@ public class LevelManager : MonoBehaviour
     {
         ClearLevel();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        startTime = Time.time;
         OnLevelClear?.Invoke(nextLevelNum);
+        OnLevelLoad?.Invoke(nextLevelNum-1);
         OnLevelStart?.Invoke(powerCellGoal);  
     }
 
@@ -56,7 +58,15 @@ public class LevelManager : MonoBehaviour
 
     public void ClearLevel()
     {
+        Debug.Log(gameObject.transform.parent.gameObject.name + "cells" + " : " + PlayerPrefs.GetInt(gameObject.transform.parent.gameObject.name + "cells", 0));
+        Debug.Log(gameObject.transform.parent.gameObject.name + "time" + " : " + PlayerPrefs.GetFloat(gameObject.transform.parent.gameObject.name + "time", 0));
+
         // Save max for gameObject.transform.parent.gameObject.name
+        if (PlayerPrefs.GetInt(gameObject.transform.parent.gameObject.name + "cells", 0) < powerCellsCollected)
+        {
+            PlayerPrefs.SetInt(gameObject.transform.parent.gameObject.name + "cells", powerCellsCollected);
+        }
+
         powerCellManager.ResetPowerCellManager();
         powerCellsCollected = 0;
     }
@@ -64,6 +74,11 @@ public class LevelManager : MonoBehaviour
     public void RecordCompletionTime()
     {
         float completionTime = Time.time - startTime;
+        
         // Save completion time for gameObject.transform.parent.gameObject.name
+        if (completionTime < PlayerPrefs.GetFloat(gameObject.transform.parent.gameObject.name + "time", 0) || PlayerPrefs.GetFloat(gameObject.transform.parent.gameObject.name + "time", 0) == 0)
+        {
+            PlayerPrefs.SetFloat(gameObject.transform.parent.gameObject.name + "time", completionTime);
+        }  
     }
 }
