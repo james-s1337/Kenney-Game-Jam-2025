@@ -41,6 +41,10 @@ public class Projectile : MonoBehaviour
         {
             return;
         }
+        if (player.hp <= 0)
+        {
+            gameObject.SetActive(false);
+        }
 
         transform.Translate(Vector2.right * speed * Time.deltaTime);
 

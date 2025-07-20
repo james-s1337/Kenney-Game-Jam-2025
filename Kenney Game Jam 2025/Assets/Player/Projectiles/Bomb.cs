@@ -34,6 +34,10 @@ public class Bomb : Projectile
         {
             return;
         }
+        if (player.hp <= 0)
+        {
+            gameObject.SetActive(false);
+        }
 
         if (Time.time - startTime >= lifeTime && !exploding)
         {
@@ -51,7 +55,6 @@ public class Bomb : Projectile
         {
             if (target.tag == "Enemy")
             {
-                
                 target.GetComponent<Enemy>().TakeDamage(damage);
             }
         }

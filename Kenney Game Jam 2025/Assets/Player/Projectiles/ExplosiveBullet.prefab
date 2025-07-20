@@ -52,7 +52,7 @@ MonoBehaviour:
   speed: 6
   lifeTime: 5
   damage: 5
-  explosionRadius: 0.6
+  explosionRadius: 1.5
   particles: {fileID: 8420283483158745706}
   spriteObj: {fileID: 8512896957678421666}
   whatIsEnemy:

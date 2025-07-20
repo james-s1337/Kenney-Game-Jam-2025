@@ -9,6 +9,7 @@ TagManager:
   - Spaceship
   - PowerCell
   - Enemy
+  - Void
   layers:
   - Default
   - TransparentFX
