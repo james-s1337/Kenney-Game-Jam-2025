@@ -3,10 +3,17 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
+    private GameManager gm;
     private Vector2 movementInput;
     public int NormInputX { get; private set; }
     public int NormInputY { get; private set; }
     public bool attackInput { get; private set; }
+    private bool pauseInput;
+
+    private void Awake()
+    {
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>(); ;
+    }
 
     public void OnMoveInput(InputAction.CallbackContext context)
     {
@@ -26,6 +33,23 @@ public class PlayerInput : MonoBehaviour
         if (context.canceled)
         {
             attackInput = false;
+        }
+    }
+
+    public void OnPauseInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            pauseInput = !pauseInput;
+        }
+
+        if (pauseInput)
+        {
+            gm.PauseGame();
+        }
+        else
+        {
+            gm.ResumeGame();
         }
     }
 }

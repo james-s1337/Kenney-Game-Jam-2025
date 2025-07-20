@@ -63,6 +63,8 @@ public class Projectile : MonoBehaviour
                 return;
             }
             collision.GetComponent<Enemy>().TakeDamage(damage);
+            // Play hit sound
+
             gameObject.SetActive(false);
         }
     }

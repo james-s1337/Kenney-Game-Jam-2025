@@ -49,6 +49,8 @@ public class PowerCell : MonoBehaviour, ITouchable
         player.ChangeWeap((WeaponType)weapNum);
 
         OnTouched?.Invoke();
+        // Play sound
+
         gameObject.SetActive(false);
     }
 

@@ -79,6 +79,8 @@ public class Enemy : MonoBehaviour, IDamageable
         sprite.color = Color.red;
         // Play particles
         deathParticles.Play();
+        // Play death sound
+
         // Death sound
         yield return new WaitForSeconds(0.5f);
         Destroy(gameObject);

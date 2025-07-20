@@ -42,6 +42,7 @@ public class Weapon : MonoBehaviour
         {
             projectiles[currentProjNum].SetActive(false);
             projectiles[currentProjNum].SetActive(true); // Projectile script will have a timer that will make it inactive when it is activated
+            // Play shoot sound
 
             currentProjNum++;
             if (currentProjNum >= projectiles.Count)

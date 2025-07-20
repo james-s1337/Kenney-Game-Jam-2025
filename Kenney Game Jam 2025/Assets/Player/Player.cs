@@ -75,7 +75,6 @@ public class Player : MonoBehaviour, IDamageable
 
         if (canFire && ShootInput)
         {
-            Debug.Log("Fire!");
             canFire = false;
             Fire();
         }
@@ -131,14 +130,18 @@ public class Player : MonoBehaviour, IDamageable
             anim.SetBool("Burst", false);
             anim.SetBool("Explosive", false);
         }
-            foreach (Weapon weapon in weapons)
+
+        foreach (Weapon weapon in weapons)
+        {
+            if (weapon.GetWeapType() == weap)
             {
-                if (weapon.GetWeapType() == weap)
-                {
-                    currentWeap = weapon;
-                    return;
-                }
+                currentWeap = weapon;
+                return;
             }
+        }
+
+        // Sound
+
     }
     
     private void Fire()
@@ -152,9 +155,11 @@ public class Player : MonoBehaviour, IDamageable
         hp -= damage;
         StartCoroutine("HurtFlash");
         OnDamageTaken?.Invoke(hp);
+        // Sound
         if (hp <= 0)
         {
             // Dead
+            // Death sound
             OnDeath?.Invoke();
         }
         // Send an event to the UI to update HP display using hp as parameter
@@ -171,6 +176,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (collision.gameObject.tag == "Spaceship" && collision.gameObject.GetComponent<Spaceship>().canEscape)
         {
+            // Victory sound
             OnWin?.Invoke();
         }
     }
