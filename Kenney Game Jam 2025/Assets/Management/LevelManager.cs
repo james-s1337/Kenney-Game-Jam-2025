@@ -12,7 +12,7 @@ public class LevelManager : MonoBehaviour
     private float startTime;
 
     public UnityEvent OnLevelCompleted;
-    public UnityEvent<int> OnLevelStart, OnPowerCellCollected;
+    public UnityEvent<int> OnLevelStart, OnPowerCellCollected, OnLevelClear;
     public UnityEvent<LevelManager> OnLevelEnable;
 
     private Player player;
@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour
     {
         ClearLevel();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        OnLevelClear?.Invoke(nextLevelNum);
         OnLevelStart?.Invoke(powerCellGoal);  
     }
 

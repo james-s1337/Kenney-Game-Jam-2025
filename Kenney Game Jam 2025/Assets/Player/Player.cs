@@ -40,7 +40,7 @@ public class Player : MonoBehaviour, IDamageable
         transform.rotation = Quaternion.identity;
         ChangeWeap(WeaponType.Single);
         SetVelocityZero();
-        transform.position = new Vector3(0, 0, -3);
+        transform.position = new Vector3(0, 1, -3);
     }
 
     private void Update()
