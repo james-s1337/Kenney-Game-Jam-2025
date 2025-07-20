@@ -14,8 +14,7 @@ public class Projectile : MonoBehaviour
     protected virtual void Awake()
     {
         direction = 1;
-        player = GameObject.Find("ALIEN").GetComponent<Player>();
-
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         gameObject.SetActive(false);
     }
 
@@ -24,7 +23,6 @@ public class Projectile : MonoBehaviour
         if (direction != player.facingDirection)
         {
             direction *= -1;
-            Debug.Log(direction);
             transform.Rotate(0.0f, 180.0f, 0.0f);
         }
         transform.position = player.transform.position;
@@ -46,7 +44,7 @@ public class Projectile : MonoBehaviour
 
         transform.Translate(Vector2.right * speed * Time.deltaTime);
 
-        if (Time.time - startTime >= lifeTime)
+        if (Time.time - startTime >= lifeTime || player.hp <= 0)
         {
             gameObject.SetActive(false);
         }
@@ -56,6 +54,10 @@ public class Projectile : MonoBehaviour
     {
         if (collision.tag == "Enemy")
         {
+            if (collision.GetComponent<Enemy>().dead)
+            {
+                return;
+            }
             collision.GetComponent<Enemy>().TakeDamage(damage);
             gameObject.SetActive(false);
         }

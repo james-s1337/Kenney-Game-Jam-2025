@@ -13,8 +13,8 @@ public class PowerCell : MonoBehaviour, ITouchable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         numOfWeap = System.Enum.GetValues(typeof(WeaponType)).Length;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); // Too lazy to do extra check
         InvokeRepeating("PassiveRotate", 1, 1);
     }
 

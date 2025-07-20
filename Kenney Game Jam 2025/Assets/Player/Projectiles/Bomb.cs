@@ -49,7 +49,6 @@ public class Bomb : Projectile
 
         foreach (Collider2D target in targets)
         {
-            Debug.Log(target.name);
             if (target.tag == "Enemy")
             {
                 

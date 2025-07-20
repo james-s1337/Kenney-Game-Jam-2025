@@ -13,18 +13,26 @@ public class EnemyManager : MonoBehaviour
     private float startTime;
     private float timeSinceLastSpawn;
 
-    private int minEnemySpawns = 1;
-    private int maxEnemySpawns = 3;
+    private const int minEnemySpawns = 1;
+    private const int maxEnemySpawns = 3;
     private int spawnRateClimbs = 0; // How many times the spawn rate has increased, max is 5
     private const int maxSpawnRateClimbs = 5; // Max times the spawn rate can increase
-    private float spawnRateClimb = 0.15f; // Only happens 5 times
+    private const float spawnRateClimb = 0.15f; // Only happens 5 times
     private float currentSpawnRate;
 
+    private bool canStartSpawning;
 
     private void Start()
     {
+        StartSpawning();
+    }
+
+    public void StartSpawning()
+    {
+        canStartSpawning = false;
         currentSpawnRate = spawnRate;
-        SetStartTime();
+        spawnRateClimbs = 0;
+        StartCoroutine("GraceTime");
     }
 
     public void SetStartTime()
@@ -35,6 +43,11 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
+        if (!canStartSpawning)
+        {
+            return;
+        }
+
         if (timeSinceLastSpawn == 0 || Time.time - timeSinceLastSpawn >= currentSpawnRate)
         {
             timeSinceLastSpawn = Time.time;
@@ -50,7 +63,7 @@ public class EnemyManager : MonoBehaviour
 
     private IEnumerator SpawnWave()
     {
-        int numOfEnemies = Random.Range(minEnemySpawns, maxEnemySpawns);
+        int numOfEnemies = Random.Range(minEnemySpawns, maxEnemySpawns+1);
         int enemyType;
         if (numOfEnemies == 1)
         {
@@ -72,5 +85,19 @@ public class EnemyManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.4f);
         }
+    }
+
+    private IEnumerator GraceTime()
+    {
+        foreach (GameObject enemySpawn in enemySpawns)
+        {
+            foreach (Transform child in enemySpawn.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        yield return new WaitForSeconds(3f);
+        SetStartTime();
+        canStartSpawning = true;
     }
 }

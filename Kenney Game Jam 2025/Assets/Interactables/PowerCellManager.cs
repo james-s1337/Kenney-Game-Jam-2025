@@ -29,4 +29,10 @@ public class PowerCellManager : MonoBehaviour
         }
         powerCells[currentPowerCellIndex].SetActive(true);
     }
+
+    public void ResetPowerCellManager()
+    {
+        powerCells[currentPowerCellIndex].SetActive(false);
+        currentPowerCellIndex = 0;
+    }
 }

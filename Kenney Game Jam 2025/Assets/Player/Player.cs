@@ -1,5 +1,7 @@
+using System.Collections;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Windows;
 
 // A bit messy cause it was imported from a system where I used states to control the player
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private Rigidbody2D rb;
     private Animator anim;
+    private SpriteRenderer sprite;
     public int facingDirection { get; private set; }
 
     private bool canJump;
@@ -23,18 +26,30 @@ public class Player : MonoBehaviour, IDamageable
 
     public Weapon currentWeap { get; private set; }
 
-    private void Start()
+    public UnityEvent OnDeath, OnWin;
+    public UnityEvent<int> OnDamageTaken;
+
+    public void ResetPlayer()
     {
         hp = 3;
         canFire = true;
-        facingDirection = -1;
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        ChangeWeap(WeaponType.Goop);
+        sprite = GetComponent<SpriteRenderer>();
+        facingDirection = -1;
+        transform.rotation = Quaternion.identity;
+        ChangeWeap(WeaponType.Single);
+        SetVelocityZero();
+        transform.position = new Vector3(0, 0, -3);
     }
 
     private void Update()
     {
+        if (hp <= 0)
+        {
+            return;
+        }
+
         int NormInputX = playerInput.NormInputX;
         int NormInputY = playerInput.NormInputY;
         bool ShootInput = playerInput.attackInput;
@@ -66,6 +81,10 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
     #region Movement
+    private void SetVelocityZero()
+    {
+        rb.linearVelocity = Vector2.zero;
+    }
     // Move left or right
     private void AddVelocityX(int input)
     {
@@ -131,10 +150,33 @@ public class Player : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         hp -= damage;
+        StartCoroutine("HurtFlash");
+        OnDamageTaken?.Invoke(hp);
         if (hp <= 0)
         {
             // Dead
+            OnDeath?.Invoke();
         }
         // Send an event to the UI to update HP display using hp as parameter
+    }
+
+    private IEnumerator HurtFlash()
+    {
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.3f);
+        sprite.color = Color.white;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Spaceship" && collision.gameObject.GetComponent<Spaceship>().canEscape)
+        {
+            OnWin?.Invoke();
+        }
+    }
+
+    public void DisableSelf()
+    {
+        gameObject.SetActive(false);
     }
 }
