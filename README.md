@@ -10,7 +10,7 @@ Alien Blast Off! is an arcade shooter where you must collect power cells that sp
 
 Gameplay Overview:
 
-- Colelct power cells
+- Collect power cells
 - Defend your spaceship
 - Get powerups from power cells
 - Escape! Or keep fighting!
