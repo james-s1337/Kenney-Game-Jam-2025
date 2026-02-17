@@ -11,7 +11,9 @@ Alien Blast Off! is an arcade shooter where you must collect power cells that sp
 ## Controls
 
 A+D - Move
+
 W - Jump
+
 Space - Fire
 
 ## Credits
