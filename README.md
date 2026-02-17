@@ -17,5 +17,3 @@ Space - Fire
 ## Credits
 
 Made by: James Song / phantom-xyz
-
-[![Alien Blast Off! Demo](https://www.youtube.com/watch?v=2hI5W6k8BxI)
