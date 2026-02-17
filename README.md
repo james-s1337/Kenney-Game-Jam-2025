@@ -18,4 +18,4 @@ Space - Fire
 
 Made by: James Song / phantom-xyz
 
-[![Alien Blast Off! Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=2hI5W6k8BxI)
+[![Alien Blast Off! Demo](https://www.youtube.com/watch?v=2hI5W6k8BxI)
